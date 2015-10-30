@@ -52,7 +52,18 @@ then
 
   #Should parse env variables.
   #allows pushing the meta files in, then is able to handle connections.
-  ${DOCKER_CMD} run --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -u ${HOST_USER_ID}:${HOST_GROUP_ID} -v `pwd`:/tmp -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link ${DOCKER_GWENWEB_NAME}_hub_1:hub -p 8080:8080  --workdir='/opt/gwen-web' gwen/gwenwebws bash -c "/opt/websocketd --port=8080 --devconsole gwen-web-1.0.0-SNAPSHOT/bin/gwen-web -p /opt/gwen-web/gwen.properties -m /features/jkvine/jkvine.meta"
+  ${DOCKER_CMD} run --name ${DOCKER_GWENWEB_NAME}_instance_${PID} -u ${HOST_USER_ID}:${HOST_GROUP_ID} -v `pwd`:/tmp -v $FEATURE_DIRECTORY:/features -v $ABSOLUTE_REPORTS_PATH:/reports --link ${DOCKER_GWENWEB_NAME}_hub_1:hub -p 8080:8080  --workdir='/opt/gwen-web' gwen/gwenwebws bash -c "/opt/websocketd --port=8080 --devconsole gwen-web-1.0.0-SNAPSHOT/bin/gwen-web -p /opt/gwen-web/gwen.properties -m /features/*.meta"
+
+  # ${DOCKER} run -d --name ${BROWSER_TYPE}_ernie_wb_${BUILD_NUMBER}_${BROWSER_INDEX} \
+  #    -e "JAVA_OPTS=-trustAllSSLCertificates" ${PORT_BROWSERVNC} \
+  #    --link hub_ernie_wb_${BUILD_NUMBER}:hub \
+  #    --link web_ernie_wb_${BUILD_NUMBER}:web \
+  #    --link webstub_ernie_wb_${BUILD_NUMBER}:webstub \
+  #    --env=no_proxy=localhost,127.0.0.1,169.254.169.254,iod-artifactory.account,172.17.*,hub,web,webstub \
+  #    -v /usr/share/zoneinfo/Australia/Sydney:/etc/localtime \
+  #   -e=TZ=Australia/Sydney \
+  #    selenium/node-${BROWSER_TYPE}${DEBUG}
+  #done
 
   #sleep 10
 
