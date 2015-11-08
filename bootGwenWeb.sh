@@ -22,11 +22,11 @@ function addVNC () {
 
 function startSelenium () {
 
-  //build up the command
-  addProxy()
-  addVNC()
+#  //build up the command
+  addProxy
+  addVNC
 
-  docker run --rm --name=grid ${PORTS_COMMAND} ${PROXY_COMMAND} ${VNC_COMMAND} elgalu/selenium
+  docker run -d --rm --name=grid ${PORTS_COMMAND} ${PROXY_COMMAND} ${VNC_COMMAND} elgalu/selenium
   #docker run --rm --name=grid -p 4444:24444 -p 5920:25900 -p 6080:26080 -e http_proxy=http://172.17.42.1:3128 -e https_proxy=http://172.17.42.1:3128 -e no_proxy=localhost,127.0.0.1 -e NOVNC=true -e VNC_PASSWORD=secret elgalu/selenium
 }
 
@@ -35,7 +35,7 @@ function startGwenWebSocket() {
 }
 
 function startGwen() {
-
+ :
 }
 
 startSelenium
