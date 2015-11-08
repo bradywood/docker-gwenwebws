@@ -1,4 +1,4 @@
-
+#!/bin/bash -x
 
 #PROXY //proxy should be host and port of the docker host. please use <ip>:<port> don't specify protocol
 HOST_USER_ID=`id -u`
@@ -9,7 +9,9 @@ export VNC_COMMAND=
 export PORTS_COMMAND=${PORTS_COMMAND:-"-p 4444:24444"}
 
 function addProxy () {
-  if [ -z "$PROXY" ]; then
+  if [[ -z "$PROXY" ]]; then
+    :
+  else
     echo "Adding in proxy to the docker image"
     export PROXY_COMMAND="-e http_proxy=http://${PROXY} -e https_proxy=https://${PROXY} -e no_proxy=localhost,127.0.0.1"
   fi
@@ -39,4 +41,4 @@ function startGwen() {
 }
 
 startSelenium
-startGwenWebSocket
+#startGwenWebSocket
