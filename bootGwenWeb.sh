@@ -39,4 +39,4 @@ function startGwen() {
 }
 
 startSelenium
-startGwenWebSocket
+#startGwenWebSocket
