@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 #PROXY //proxy should be host and port of the docker host. please use <ip>:<port> don't specify protocol
 HOST_USER_ID=`id -u`
