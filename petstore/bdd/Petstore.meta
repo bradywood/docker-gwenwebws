@@ -1,0 +1,95 @@
+#
+# Copyright (c) 2017 Gwenify Pty Ltd. All rights reserved.
+# Authors: Branko Juric, Brady Wood
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+Feature: Petstore meta
+
+Scenario: Initialise globals for pet store
+    Given the base URL is "http://petstore:8080/v2"
+      And the "accept" request header is "application/json"
+      And the "Content-type" request header is "application/json"
+      And my username is "eddy"
+      And my firstname is "eddy"
+      And my lastname is "smith"
+      And my email is "gwen@gwenify.com"
+      And my password is "password"
+      And my mobile is "0419999999"
+
+@StepDef
+Scenario: I am a first time user to the petstore
+  Given the target request is GET "/user/${my username}"
+   When I send the request
+   Then the response code should be "404"
+    And the response body at json path "$.message" should be "User not found"
+
+@StepDef
+Scenario: I create a new user
+  Given the target request is POST "/user"
+    And the request body is defined by file "features/petstore/bdd/CreateUserTemplate.json"
+   When I send the request
+   Then the response code should be "200"
+    And the response body should be ""
+    And the user exists in the system
+
+@StepDef
+Scenario: the user exists in the system
+  Given the target request is GET "/user/${my username}"
+   When I send the request
+   Then the response code should be "200"
+    And the response body at json path "$.username" should contain "eddy"
+
+@StepDef
+Scenario: I should be able to login successfully
+  Given the "username" query parameter is "${my username}"
+    And the "password" query parameter is "${my password}"
+   When I login
+    And I logout
+    And I delete my user
+
+
+@StepDef
+Scenario: I login
+  Given the target request is GET "user/login"
+   When I send the request
+   Then the response code should be "200"
+    And the response body should match regex "logged in user session:.+"
+
+@StepDef
+ Scenario: I logout
+    Given the target request is GET "user/logout"
+     When I send the request
+     Then the response code should be "200"
+      And the response body should be ""
+
+@StepDef
+Scenario: I am a user looking for a new pet
+  Given I am a first time user to the petstore
+
+@StepDef
+Scenario: I search for a list of pets available
+  Given the target request is GET "pet/findByStatus"
+    And the "status" query parameter is "available"
+   When I send the request
+   Then the response code should be "200"
+
+@StepDef
+Scenario: I will be shown an empty list
+  Given the response body should be "[]"
+
+
+@StepDef
+Scenario: I no longer wish to belong to the pet store
+  Given my username is "eddy"
+
+@StepDef
+Scenario: I delete my user
+   Given the target request is DELETE "/user/${my username}"
+      When I send the request
+      Then the response code should be "200"

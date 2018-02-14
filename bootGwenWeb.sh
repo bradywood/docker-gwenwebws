@@ -34,7 +34,20 @@ function startSelenium () {
 
 function startGwenWebSocket() {
   #docker run --name gwenwebws -u ${HOST_USER_ID}:${HOST_GROUP_ID} -v `pwd`:/tmp -v `pwd`/gwen.properties:/opt/gwen-web/gwen.properties -v /home/ibdev/repos/gwen-web/features/jkvine:/features -v `pwd`/reports:/reports --link grid:hub -p 8080:8080  --workdir='/opt/gwen-web' gwen/gwenwebws bash -c "/opt/websocketd --port=8080 --devconsole gwen-web-1.0.0-SNAPSHOT/bin/gwen-web -p /opt/gwen-web/gwen.properties -m /features/*.meta"
-  docker run --name gwenwebws -u ${HOST_USER_ID}:${HOST_GROUP_ID} -v `pwd`:/tmp -v `pwd`/gwen.properties:/opt/gwen-web/gwen.properties `pwd`/reports:/reports --link grid:hub -p 8080:8080  --workdir='/opt/gwen-web' gwen/gwenwebws bash -c "/opt/websocketd --port=8080 --devconsole gwen-web-1.0.0-SNAPSHOT/bin/gwen-web -p /opt/gwen-web/gwen.properties -m gwen-web-1.0.0-SNAPSHOT/features/jkvine/*.meta -r /reports"
+
+  # Take out the link, as linking now to AWS...
+  # this line also links to the gwenweb.
+  #docker run --name gwenwebws -u ${HOST_USER_ID}:${HOST_GROUP_ID} -v `pwd`:/tmp -v `pwd`/gwen.properties:/opt/gwen-web/gwen.properties -v `pwd`/reports:/reports -p 8080:8080  --workdir='/opt/gwen-web' gwen/gwenwebws bash -c "/opt/websocketd --port=8080 --devconsole gwen-web-1.0.0-SNAPSHOT/bin/gwen-web -p /opt/gwen-web/gwen.properties -m gwen-web-1.0.0-SNAPSHOT/features/jkvine/*.meta -r /reports"
+
+  # starts gwen rest
+ docker run --name petstore -d -e SWAGGER_HOST=http://petstore.swagger.io   -e SWAGGER_BASE_PATH=/v2 -p 80:8080 swaggerapi/petstore
+ docker run --rm --name gwenwebws --link petstore:petstore -v `pwd`:/tmp -v `pwd`/petstore:/opt/gwen-rest/gwen-rest-1.0.0/features/petstore -v `pwd`/gwen.properties:/opt/gwen-rest/gwen.properties -v `pwd`/reports:/reports -p 8080:8080 --workdir='/opt/gwen-rest/gwen-rest-1.0.0' gwen/gwenwebws bash -c '/opt/websocketd --port=8080 --devconsole bin/gwen-rest -p /opt/gwen-rest/gwen.properties -m features/petstore/bdd/*.meta -r /reports'
+ #WORKING - docker run --rm --name gwenwebws --link petstore:petstore -v `pwd`:/tmp -v `pwd`/petstore:/opt/gwen-rest/gwen-rest-1.0.0/features/petstore -v `pwd`/gwen.properties:/opt/gwen-rest/gwen.properties -v `pwd`/reports:/reports -p 8080:8080 --workdir='/opt/gwen-rest' gwen/gwenwebws bash -c '/opt/websocketd --port=8080 --devconsole gwen-rest-1.0.0/bin/gwen-rest -p /opt/gwen-rest/gwen.properties -m gwen-rest-1.0.0/features/petstore/bdd/*.meta -r /reports'
+ 
+ #docker run --rm --name gwenwebws -u ${HOST_USER_ID}:${HOST_GROUP_ID} -v `pwd`:/tmp -v `pwd`/gwen.properties:/opt/gwen-rest/gwen.properties -v `pwd`/reports:/reports -p 8080:8080 --workdir='/opt/gwen-rest' gwen/gwenwebws bash -c '/opt/websocketd --port=8080 --devconsole gwen-rest-1.0.0/bin/gwen-rest -p /opt/gwen-rest/gwen.properties -m gwen-rest-1.0.0/features/petstore/*.meta -r /reports'
+
+ # This is a working runnable command that connects to the AWS instance
+ #docker run --rm --name gwenwebws -u 501:20 -v /Users/bradywood/github/docker-gwenwebws:/tmp -v /Users/bradywood/github/docker-gwenwebws/gwen.properties:/opt/gwen-web/gwen.properties -p 8080:8080 --workdir=/opt/gwen-web gwen/gwenwebws bash -c '/opt/websocketd --port=8080 --devconsole gwen-web-1.0.0-SNAPSHOT/bin/gwen-web -p /opt/gwen-web/gwen.properties -m gwen-web-1.0.0-SNAPSHOT/features/jkvine/*.meta -r /reports'
 }
 
 function startGwen() {
